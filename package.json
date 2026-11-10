@@ -1,0 +1,18 @@
+{
+  "name": "js-lecture-weather",
+  "version": "1.0.0",
+  "description": "Live-coding demo: the DOM, fetch, JSON and the OpenWeather API",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "solution": "node solution/server.js"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

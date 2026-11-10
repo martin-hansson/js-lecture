@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Now</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+
+    <form id="search-form" class="search">
+      <input id="city-input" type="text" placeholder="Search for a city…" autocomplete="off">
+      <button type="submit">Search</button>
+      <button id="locate-btn" type="button" class="locate" title="Use my location" aria-label="Use my location">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <circle cx="12" cy="12" r="8"/>
+          <line x1="12" y1="1" x2="12" y2="4"/>
+          <line x1="12" y1="20" x2="12" y2="23"/>
+          <line x1="1" y1="12" x2="4" y2="12"/>
+          <line x1="20" y1="12" x2="23" y2="12"/>
+        </svg>
+      </button>
+    </form>
+
+    <section class="card">
+
+      <header class="card-header">
+        <div>
+          <h1 id="city">City</h1>                 <!-- name -->
+          <p id="country" class="muted">Country</p> <!-- sys.country -->
+        </div>
+        <p id="updated" class="muted small">Updated --:--</p> <!-- dt -->
+      </header>
+
+      <div class="current">
+        <!-- weather[0].icon → https://openweathermap.org/img/wn/{icon}@4x.png -->
+        <img id="icon" class="icon" src="https://openweathermap.org/img/wn/02d@4x.png" alt="Weather icon">
+        <div>
+          <p class="temp"><span id="temp">--</span><span class="unit">°C</span></p> <!-- main.temp -->
+          <p id="description" class="description">Description</p>                <!-- weather[0].description -->
+          <p class="muted">
+            H: <span id="temp-max">--</span>°
+            &nbsp;·&nbsp;
+            L: <span id="temp-min">--</span>°                                     <!-- main.temp_max / temp_min -->
+          </p>
+        </div>
+      </div>
+
+      <ul class="details">
+        <li>
+          <span class="label">Feels like</span>
+          <span class="value"><span id="feels-like">--</span>°</span>   <!-- main.feels_like -->
+        </li>
+        <li>
+          <span class="label">Humidity</span>
+          <span class="value"><span id="humidity">--</span>%</span>     <!-- main.humidity -->
+        </li>
+        <li>
+          <span class="label">Wind</span>
+          <span class="value"><span id="wind">--</span> m/s</span>      <!-- wind.speed -->
+        </li>
+        <li>
+          <span class="label">Pressure</span>
+          <span class="value"><span id="pressure">--</span> hPa</span>  <!-- main.pressure -->
+        </li>
+        <li>
+          <span class="label">Clouds</span>
+          <span class="value"><span id="clouds">--</span>%</span>       <!-- clouds.all -->
+        </li>
+        <li>
+          <span class="label">Visibility</span>
+          <span class="value"><span id="visibility">--</span> km</span> <!-- visibility (metres!) -->
+        </li>
+      </ul>
+
+      <footer class="sun">
+        <div>
+          <span class="label">Sunrise</span>
+          <span id="sunrise" class="value">--:--</span>  <!-- sys.sunrise (Unix seconds) -->
+        </div>
+        <div class="sun-line" aria-hidden="true"></div>
+        <div>
+          <span class="label">Sunset</span>
+          <span id="sunset" class="value">--:--</span>   <!-- sys.sunset (Unix seconds) -->
+        </div>
+      </footer>
+
+    </section>
+
+    <p id="status" class="status">Waiting for data…</p>
+
+  </main>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
