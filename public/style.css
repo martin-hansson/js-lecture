@@ -85,7 +85,6 @@ body {
   place-items: center;
 }
 
-/* Add class="loading" from JS while waiting for the browser's position */
 .search .locate.loading svg {
   animation: pulse 1s ease-in-out infinite;
 }
@@ -216,15 +215,23 @@ h1 {
 }
 
 /* ---------- Status message ---------- */
+/* Fixed height so showing or clearing a message doesn't shift the layout. */
 .status {
+  align-self: center;
   text-align: center;
   font-size: 0.9rem;
+  line-height: 1.4;
+  min-height: calc(1.4em + 16px);
+  padding: 8px 16px;
+  border-radius: 999px;
   color: var(--muted);
 }
 
 .status.error {
-  color: #ffe0e0;
+  color: #fff;
+  background: #b3261e;
   font-weight: 600;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 400px) {

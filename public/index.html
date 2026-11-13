@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather Now</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛅</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -31,22 +32,21 @@
 
       <header class="card-header">
         <div>
-          <h1 id="city">City</h1>                 <!-- name -->
-          <p id="country" class="muted">Country</p> <!-- sys.country -->
+          <h1 id="city">City</h1>
+          <p id="country" class="muted">Country</p>
         </div>
-        <p id="updated" class="muted small">Updated --:--</p> <!-- dt -->
+        <p id="updated" class="muted small">Updated --:--</p>
       </header>
 
       <div class="current">
-        <!-- weather[0].icon → https://openweathermap.org/img/wn/{icon}@4x.png -->
         <img id="icon" class="icon" src="https://openweathermap.org/img/wn/02d@4x.png" alt="Weather icon">
         <div>
-          <p class="temp"><span id="temp">--</span><span class="unit">°C</span></p> <!-- main.temp -->
-          <p id="description" class="description">Description</p>                <!-- weather[0].description -->
+          <p class="temp"><span id="temp">--</span><span class="unit">°C</span></p>
+          <p id="description" class="description">Description</p>
           <p class="muted">
             H: <span id="temp-max">--</span>°
             &nbsp;·&nbsp;
-            L: <span id="temp-min">--</span>°                                     <!-- main.temp_max / temp_min -->
+            L: <span id="temp-min">--</span>°
           </p>
         </div>
       </div>
@@ -54,39 +54,39 @@
       <ul class="details">
         <li>
           <span class="label">Feels like</span>
-          <span class="value"><span id="feels-like">--</span>°</span>   <!-- main.feels_like -->
+          <span class="value"><span id="feels-like">--</span>°</span>
         </li>
         <li>
           <span class="label">Humidity</span>
-          <span class="value"><span id="humidity">--</span>%</span>     <!-- main.humidity -->
+          <span class="value"><span id="humidity">--</span>%</span>
         </li>
         <li>
           <span class="label">Wind</span>
-          <span class="value"><span id="wind">--</span> m/s</span>      <!-- wind.speed -->
+          <span class="value"><span id="wind">--</span> m/s</span>
         </li>
         <li>
           <span class="label">Pressure</span>
-          <span class="value"><span id="pressure">--</span> hPa</span>  <!-- main.pressure -->
+          <span class="value"><span id="pressure">--</span> hPa</span>
         </li>
         <li>
           <span class="label">Clouds</span>
-          <span class="value"><span id="clouds">--</span>%</span>       <!-- clouds.all -->
+          <span class="value"><span id="clouds">--</span>%</span>
         </li>
         <li>
           <span class="label">Visibility</span>
-          <span class="value"><span id="visibility">--</span> km</span> <!-- visibility (metres!) -->
+          <span class="value"><span id="visibility">--</span> km</span>
         </li>
       </ul>
 
       <footer class="sun">
         <div>
           <span class="label">Sunrise</span>
-          <span id="sunrise" class="value">--:--</span>  <!-- sys.sunrise (Unix seconds) -->
+          <span id="sunrise" class="value">--:--</span>
         </div>
         <div class="sun-line" aria-hidden="true"></div>
         <div>
           <span class="label">Sunset</span>
-          <span id="sunset" class="value">--:--</span>   <!-- sys.sunset (Unix seconds) -->
+          <span id="sunset" class="value">--:--</span>
         </div>
       </footer>
 
@@ -96,6 +96,6 @@
 
   </main>
 
-  <script src="app.js" type="module"></script>
+  <script src="app.js"></script>
 </body>
 </html>

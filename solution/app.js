@@ -1,4 +1,4 @@
-const DEFAULT_CITY = "Uppsala";
+const UPPSALA = { lat: 59.8586, lon: 17.6387 };
 
 const form = document.getElementById("search-form");
 const cityInput = document.getElementById("city-input");
@@ -27,11 +27,10 @@ function setStatus(message, isError = false) {
   statusText.classList.toggle("error", isError);
 }
 
-// OpenWeather gives times as "Unix time": seconds since 1 Jan 1970 (UTC).
-// It also gives the city's offset from UTC in seconds (data.timezone).
-// Adding the two and formatting as UTC gives the clock time *in that city*.
+// Shifts a Unix timestamp by the location's UTC offset (seconds) and formats
+// it as UTC, which yields the local clock time at that location.
 function formatTime(unixSeconds, timezoneOffset) {
-  const date = new Date((unixSeconds + timezoneOffset) * 1000); // JS wants milliseconds
+  const date = new Date((unixSeconds + timezoneOffset) * 1000);
   return date.toLocaleTimeString("sv-SE", {
     hour: "2-digit",
     minute: "2-digit",
@@ -39,9 +38,25 @@ function formatTime(unixSeconds, timezoneOffset) {
   });
 }
 
-async function getWeather(query) {
-  const params = new URLSearchParams(query);
+async function getWeather(coords) {
+  // Without URLSearchParams:
+  //   "lat=" + coords.lat + "&lon=" + coords.lon
+  const params = new URLSearchParams(coords);
+
   const response = await fetch(`/api/weather?${params}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong");
+  }
+
+  return data;
+}
+
+async function findCity(city) {
+  const params = new URLSearchParams({ city }); // { city: city }
+
+  const response = await fetch(`/api/geocode?${params}`);
   const data = await response.json();
 
   if (!response.ok) {
@@ -54,7 +69,7 @@ async function getWeather(query) {
 function showWeather(data) {
   console.log(data);
 
-  cityEl.textContent = data.name;
+  cityEl.textContent = data.name || "Unnamed place";
   countryEl.textContent = data.sys.country;
 
   tempEl.textContent = Math.round(data.main.temp);
@@ -81,10 +96,10 @@ function showWeather(data) {
   document.title = `${Math.round(data.main.temp)}° ${data.name} – Weather Now`;
 }
 
-async function loadWeather(query) {
+async function loadWeather(coords) {
   setStatus("Loading…");
   try {
-    const data = await getWeather(query);
+    const data = await getWeather(coords);
     showWeather(data);
     setStatus("");
   } catch (error) {
@@ -92,7 +107,7 @@ async function loadWeather(query) {
   }
 }
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const city = cityInput.value.trim();
@@ -100,12 +115,29 @@ form.addEventListener("submit", (event) => {
     setStatus("Type a city name first", true);
     return;
   }
-
-  loadWeather({ city: city });
   cityInput.value = "";
+
+  setStatus(`Looking up ${city}…`);
+  try {
+    const place = await findCity(city);
+
+    // Without destructuring:
+    //   const lat = place.lat;
+    //   const lon = place.lon;
+    const { lat, lon } = place;
+    await loadWeather({ lat, lon });
+  } catch (error) {
+    setStatus(`Error: ${error.message}`, true);
+  }
 });
 
-locateButton.addEventListener("click", () => {
+function getPosition() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
+
+locateButton.addEventListener("click", async () => {
   if (!("geolocation" in navigator)) {
     setStatus("Your browser does not support geolocation", true);
     return;
@@ -114,18 +146,21 @@ locateButton.addEventListener("click", () => {
   setStatus("Finding your location…");
   locateButton.classList.add("loading");
 
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      locateButton.classList.remove("loading");
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      loadWeather({ lat: lat, lon: lon });
-    },
-    (error) => {
-      locateButton.classList.remove("loading");
-      setStatus(`Could not get your location: ${error.message}`, true);
-    }
-  );
+  try {
+    const position = await getPosition();
+
+    // Without destructuring:
+    //   const latitude = position.coords.latitude;
+    //   const longitude = position.coords.longitude;
+    const { latitude, longitude, accuracy } = position.coords;
+    console.log(`Position ±${Math.round(accuracy)} m`);
+
+    await loadWeather({ lat: latitude, lon: longitude });
+  } catch (error) {
+    setStatus(`Could not get your location: ${error.message}`, true);
+  } finally {
+    locateButton.classList.remove("loading");
+  }
 });
 
-loadWeather({ city: DEFAULT_CITY });
+loadWeather(UPPSALA);
